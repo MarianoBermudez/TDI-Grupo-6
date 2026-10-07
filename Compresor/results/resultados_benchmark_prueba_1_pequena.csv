@@ -1,0 +1,4 @@
+Archivo,Algoritmo,Tamano_Original,Tamano_Comprimido,Ratio,Ahorro_Pct,Tiempo_ms,Weissman
+tests/prueba_1_pequena.txt,gzip-6,64,59,1.085,7.81,1.78,1.000
+tests/prueba_1_pequena.txt,Zstd-3,64,63,1.016,1.56,2.24,0.671
+tests/prueba_1_pequena.txt,BWT+Huffman,64,59,1.085,7.81,11.01,0.241

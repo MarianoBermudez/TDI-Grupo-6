@@ -1,0 +1,4 @@
+Archivo,Algoritmo,Tamano_Original,Tamano_Comprimido,Ratio,Ahorro_Pct,Tiempo_ms,Weissman
+tests/prueba_3_alta_repeticion.txt,gzip-6,102400,914,112.035,99.11,3.83,1.000
+tests/prueba_3_alta_repeticion.txt,Zstd-3,102400,92,1113.043,99.91,4.73,8.581
+tests/prueba_3_alta_repeticion.txt,BWT+Huffman,102400,78316,1.308,23.52,10132.78,0.002
