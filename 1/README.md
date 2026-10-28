@@ -1,41 +1,59 @@
+# PRÁCTICOS TEORÍA DE LA INFORMACIÓN - ÁREA TEMÁTICA Nº 1
+Licenciatura en Ciencias de la Computación - 2026
 
-## Resultados Obtenidos
+## Grupo 6: 
+- Gómez Guillermo E010-376
+- Mondre Juan E010-220
+- Bermúdez Mariano E010-294
+- Cardó Luciano E010-203
+- López Lautaro E010-233
 
-| Métrica | Archivo WAV (Sin Compresión) | Archivo MP3 (Comprimido) | Comparativa y Significado |
-| :--- | :---: | :---: | :--- |
-| **Tamaño del Archivo** | 2,283,664 bytes | 280,700 bytes | El archivo MP3 es **8.13 veces más pequeño** (reducción del 87.7%). |
-| **Entropía de Shannon ($H$)** | 7.745859 bits/byte | 7.950586 bits/byte | Ambos archivos registran una entropía altísima por byte. |
-| **Entropía Máxima ($H_{max}$)** | 8.000000 bits/byte | 8.000000 bits/byte | Límite teórico para un alfabeto de 256 símbolos (8 bits). |
-| **Redundancia ($R$)** | 3.18% | 0.62% | La redundancia matemática directa es baja en ambos a nivel individual. |
+## Organización del Repositorio
+El repositorio está compuesto por la resolución de los prácticos 1 y 2 (PDF) y los ejercicios del Práctico de Máquina 1 desarrollados en python, incluyendo los archivos adicionales y de prueba según sea necesario.
 
----
+## Dependencias Necesarias
+El proyecto utiliza Python 3.8+ y combina librerías estándar con librerías numéricas y gráficas habituales:
 
-##  Visualización: Histograma de Frecuencias
+- Librerías estándar de Python: os, sys, math, struct, socket, threading, random, json, zipfile.
+- Librerías externas:
+    - numpy: Operaciones matriciales y manejo de arreglos numéricos.
+    - matplotlib: Generación y visualización de histogramas y gráficos comparativos.
 
-El gráfico muestra cómo se distribuyen las probabilidades de aparición de cada uno de los 256 valores posibles del byte (de 0 a 255):
+Para instalar las dependencias externas necesarias, ejecute:
 
-![Histograma de Frecuencias Comparativo](histogramas_audio.png)
+    pip install numpy matplotlib
 
 
+## Instrucciones de Ejecución
 
-##  El "Engaño" de la Entropía
 
-Si el archivo WAV pesa **8 veces más** que el MP3 y contiene la misma canción, tiene que tener muchísima información repetida (redundancia). Entonces, **¿por qué su entropía dio 7.74 bits/byte, casi tan alta como la del MP3 (7.95 bits/byte)?**
+### Scripts con Dependencia Directa de Archivos Locales
 
-Este fenómeno se conoce en Teoría de la Información como el **engaño de la entropía de primer orden** y se debe a tres razones fundamentales:
+* **`analizador_audio.py`**: Requiere que los archivos `audio.wav` y `audio.mp3` existan previamente en el directorio de ejecución.
+* **`analizador_imagen.py`**: Utilizando los archivos `image.bmp` e `image.jpg` del directorio actual.
+* **`analizador_texto.py`**: Genera un archivo `texto.txt` (~70 KB) y su versión `texto.zip`.
+* **`analizador_ic.py`**: Requiere la existencia del archivo `texto.txt` en el directorio actual (crea automáticamente `texto.zip` si no está presente).
+* **`empaquetado_bitwise.py`**: Se ejecuta directamente (`python empaquetado_bitwise.py`) para generar y comparar `personas.json` y `personas.bin`.
 
-### 1. El "Truco" del Byte de Detalle Fino (LSB)
-La mayoría de los archivos WAV de audio digitalizan el sonido usando **16 bits por muestra**. Esto significa que cada muestra de sonido se compone de **dos bytes**:
-* **El byte "grande" (MSB - Most Significant Byte):** Controla los cambios principales del volumen y la onda de audio. Este byte es muy ordenado y predecible.
-* **El byte "chico" (LSB - Least Significant Byte):** Controla los detalles microscópicos del sonido, incluyendo imperfecciones de la grabación y ruido de fondo.
 
-A nivel de detalle fino (LSB), los valores cambian de forma caótica y veloz. Para el analizador de bytes, este byte microscópico parece **puro ruido aleatorio** (con entropía de casi 8 bits). Al analizar el archivo "byte por byte" de forma plana, el ruido del LSB actúa como una cortina de humo que infla artificialmente la entropía total del WAV, ocultando el orden del archivo.
+### Scripts Interactivos por Consola (requieren entrada del usuario)
 
-### 2. La Entropía de Shannon no tiene "Memoria"
-La fórmula clásica de entropía que calcula el programa asume que la fuente **no tiene memoria** (es decir, que la aparición de un byte no depende del byte anterior). 
-* En la música real, si una muestra de audio tiene un volumen alto, la siguiente muestra milisegundos después también lo tendrá. Existe una **altísima correlación temporal** (memoria).
-* El archivo WAV guarda el audio en el dominio del tiempo muestra tras muestra, por lo que su verdadera redundancia está en la **secuencia** de los bytes, no en la frecuencia con la que aparecen de forma aislada.
-* El compresor MP3 se aprovecha de esta memoria para agrupar y descartar lo repetido. Por eso el MP3 logra ser tan pequeño: elimina la redundancia de las secuencias. Lo que queda dentro del MP3 son datos ultra condensados y descorrelacionados, por lo que su entropía es genuinamente alta.
+* **`capacidad_canal.py`**: Solicita ingresar manualmente por teclado las probabilidades condicionales $P(Y|X)$ para una matriz $2 \times 4$.
+* **`distancia_cadenas.py`**: Solicita ingresar dos cadenas de texto por consola para calcular las distancias de Hamming, Levenshtein y su grado de similitud.
+* **`deteccion_errores.py`**: Solicita ingresar un CUIT/CUIL de 11 dígitos para validar su dígito verificador mediante el algoritmo de módulo 11.
 
-### 3. El Ruido Físico no es Información
-Cualquier grabación analógica arrastra ruido térmico de los micrófonos o ruido de cuantización de la tarjeta de sonido. En Teoría de la Información, **el ruido físico equivale a entropía máxima**. El analizador de software no puede distinguir entre música hermosa y ruido molesto; para el algoritmo, ambos son "incertidumbre", lo que eleva el valor del WAV de manera ficticia.
+
+### Arquitectura Cliente-Servidor (Sockets TCP)
+#### `servidor_bsc.py` y `cliente_bsc.py`
+
+1. Abrir una primera terminal y ejecutar el servidor:
+   ```bash
+   python servidor_bsc.py
+   ```
+   *(Quedará escuchando en el puerto TCP 5555).*
+
+2. Abrir una segunda terminal y ejecutar el cliente:
+   ```bash
+   python cliente_bsc.py
+   ```
+   *(Se conectará al servidor, ejecutará las pruebas empíricas de BER, envío de texto y cálculo de capacidad de canal).*
